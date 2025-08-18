@@ -105,4 +105,11 @@ class TwoSat {
             }
         }
     }
+
+    public void clear() {
+        java.util.Arrays.fill(head, 0);
+        java.util.Arrays.fill(dfn, 0);
+        z = 1;
+        ts = no = 0;
+    }
 }
