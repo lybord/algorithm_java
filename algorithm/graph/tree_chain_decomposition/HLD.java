@@ -10,8 +10,7 @@ public class HLD {
     int[] stk = new int[1000001];
 
     int[] head, nxt, to, val;
-    int[] fa, dep, sz, son;
-    int[] top, dfn;
+    int[] fa, dep, sz, son, top, dfn;
 
     SegTree tree;
 
