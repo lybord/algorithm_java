@@ -1,8 +1,3 @@
-package algorithm.string.trie.node;
-
-/**
- * 测试链接：https://www.nowcoder.com/practice/a55a584bc0ca4a83a272680174be113b
- */
 public class Trie {
 
     class Node {
@@ -61,34 +56,4 @@ public class Trie {
         }
         return cur.cnt;
     }
-
-    public String[] trieU(String[][] operators) {
-        root = new Node();
-        int n = 0;
-        for (String[] op : operators) {
-            if (op[0].equals("3") || op[0].equals("4")) {
-                n++;
-            }
-        }
-        String[] ans = new String[n];
-        int i = 0;
-        for (String[] op : operators) {
-            switch (op[0]) {
-                case "1" : 
-                    insert(op[1]);
-                    break;
-                case "2" : 
-                    delete(op[1]);
-                    break;
-                case "3" : 
-                    ans[i++] = search(op[1]) ? "YES" : "NO";
-                    break;
-                case "4" : 
-                    ans[i++] = String.valueOf(prefixNumber(op[1]));
-                    break;
-            }
-        }
-        return ans;
-    }
-
 }

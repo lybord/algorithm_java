@@ -1,9 +1,3 @@
-package algorithm.string.trie.node;
-
-/**
- * 0-1 trie
- */
-
 class Trie {
     private Node root = new Node();
 

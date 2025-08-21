@@ -1,23 +1,21 @@
-package algorithm.string.trie.array;
-
-/**
- * 0-1 trie
- * 测试链接：https://leetcode.cn/problems/maximum-xor-of-two-numbers-in-an-array/
- */
 class Trie01 {
-    private static final int H = 30, MAXN = 200000, MAXT = MAXN * (H + 2) + 1;
-    private static int[] nxt0 = new int[MAXT], nxt1 = new int[MAXT];
-    private static int[] cnt = new int[MAXT];
+    private static final int H = 30, MAXN = 500000, MAXT = MAXN * (H + 2);
+    private static final int[] nxt = new int[MAXT * 2 + 1], cnt = new int[MAXT + 1];
+
     private static int no;
+
+    private static int idx(int u, int i) {
+        return u + i * MAXT;
+    }
 
     public static void clear() {
         for (int i = 1; i <= no; i++) {
-            nxt0[i] = nxt1[i] = cnt[i] = 0;
+            nxt[i] = nxt[i + MAXT] = cnt[i] = 0;
         }
         no = 0;
     }
 
-    private int root;
+    private final int root;
 
     public Trie01() {
         root = ++no;
@@ -25,59 +23,50 @@ class Trie01 {
 
     public void insert(int v) {
         int u = root;
-        for (int i = H; i >= 0; i--) {
-            if ((v >> i & 1) == 0) {
-                if (nxt0[u] == 0) {
-                    nxt0[u] = ++no;
-                }
-                u = nxt0[u];
-            } else {
-                if (nxt1[u] == 0) {
-                    nxt1[u] = ++no;
-                }
-                u = nxt1[u];
+        for (int i = H, j; i >= 0; i--) {
+            j = idx(u, v >> i & 1);
+            if (nxt[j] == 0) {
+                nxt[j] = ++no;
             }
+            u = nxt[j];
             cnt[u]++;
         }
     }
 
+    // v 代表的值一定在 trie 中
     public void delete(int v) {
         int u = root;
         for (int i = H; i >= 0; i--) {
-            if ((v >> i & 1) == 0) {
-                if (--cnt[nxt0[u]] == 0) {
-                    nxt0[u] = 0;
-                    return;
-                }
-                u = nxt0[u];
-            } else {
-                if (--cnt[nxt1[u]] == 0) {
-                    nxt1[u] = 0;
-                    return;
-                }
-                u = nxt1[u];
+            u = nxt[idx(u, v >> i & 1)];
+            cnt[u]--;
+        }
+    }
+
+    public boolean contains(int v) {
+        return valNumber(v) > 0;
+    }
+
+    public int valNumber(int v) {
+        int u = root;
+        for (int i = H; i >= 0; i--) {
+            u = nxt[idx(u, v >> i & 1)];
+            if (u == 0) {
+                return 0;
             }
         }
+        return cnt[u];
     }
 
     public int maxXor(int v) {
         int u = root;
         int ans = 0;
-        for (int i = H; i >= 0; i--) {
-            if ((v >> i & 1) == 0) {
-                if (nxt1[u] != 0) {
-                    ans |= 1 << i;
-                    u = nxt1[u];
-                } else {
-                    u = nxt0[u];
-                }
+        for (int i = H, j; i >= 0; i--) {
+            j = idx(u, (v >> i & 1) ^ 1);
+            if (nxt[j] != 0) {
+                ans |= 1 << i;
+                u = nxt[j];
             } else {
-                if (nxt0[u] != 0) {
-                    ans |= 1 << i;
-                    u = nxt0[u];
-                } else {
-                    u = nxt1[u];
-                }
+                u = nxt[idx(u, v >> i & 1)];
             }
         }
         return ans;
@@ -86,21 +75,13 @@ class Trie01 {
     public int minXor(int v) {
         int u = root;
         int ans = 0;
-        for (int i = H; i >= 0; i--) {
-            if ((v >> i & 1) == 0) {
-                if (nxt0[u] != 0) {
-                    u = nxt0[u];
-                } else {
-                    ans |= 1 << i;
-                    u = nxt1[u];
-                }
+        for (int i = H, j; i >= 0; i--) {
+            j = idx(u, v >> i & 1);
+            if (nxt[j] != 0) {
+                u = nxt[j];
             } else {
-                if (nxt1[u] != 0) {
-                    u = nxt1[u];
-                } else {
-                    ans |= 1 << i;
-                    u = nxt0[u];
-                }
+                ans |= 1 << i;
+                u = nxt[idx(u, (v >> i & 1) ^ 1)];
             }
         }
         return ans;
