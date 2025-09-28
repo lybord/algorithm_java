@@ -1,4 +1,20 @@
 public class Mat {
+
+    // 矩阵快速幂
+    long[][] pow(long[][] a, long b) {
+        long[][] res = new long[a.length][a.length];
+        for (int i = 0; i < a.length; i++) {
+            res[i][i] = 1;
+        }
+        while (b != 0) {
+            if ((b & 1) != 0) {
+                res = mul(res, a);
+            }
+            a = mul(a, a);
+            b >>= 1;
+        }
+        return res;
+    }
     
     // 矩阵乘法
     long[][] mul(long[][] mat1, long[][] mat2) {
