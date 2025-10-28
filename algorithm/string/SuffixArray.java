@@ -33,19 +33,20 @@ class SuffixArray {// DC3
 
     public SuffixArray(int[] arr) {
         this.arr = arr;
-        int mn = Integer.MAX_VALUE, mx = Integer.MIN_VALUE;
-        for (int v : arr) {
-            mn = Math.min(mn, v);
-            mx = Math.max(mx, v);
-        }
-        mn--;
         int n = arr.length;
+        int[] val = arr.clone();
+        java.util.Arrays.sort(val);
+        int m = 1;
+        for (int i = 1; i < n; i++) {
+            if (val[i - 1] != val[i]) {
+                val[m++] = val[i];
+            }
+        }
         int[] nums = new int[n];
         for (int i = 0; i < n; i++) {
-            nums[i] = arr[i] - mn;
+            nums[i] = java.util.Arrays.binarySearch(val, 0, m, arr[i]) + 1;
         }
-        mx -= mn;
-        init(nums, mx);
+        init(nums, m);
     }
 
     private void init(int[] nums, int mx) {
