@@ -1,6 +1,3 @@
-package algorithm.string;
-import java.util.*;
-
 public class KMP {
     
     public int[] kmp(String s, String t) {
@@ -23,7 +20,7 @@ public class KMP {
                 y = next[y];
             }
         }
-        return Arrays.copyOf(ans, z);
+        return java.util.Arrays.copyOf(ans, z);
     }
 
     public int[] next(char[] str) {

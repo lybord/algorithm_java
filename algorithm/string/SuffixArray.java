@@ -1,5 +1,3 @@
-package algorithm.string;
-
 class SuffixArray {// DC3
 
     public int[] sa;// sa[i] 表示排名为 i 的后缀

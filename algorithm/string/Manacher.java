@@ -1,5 +1,3 @@
-package algorithm.string;
-
 public class Manacher {
     
     // 若s[i..j]为回文串，则  (j - i + 1) < pArr[i + j + 1]

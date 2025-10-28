@@ -1,5 +1,3 @@
-package algorithm.string;
-
 public class z_function {
     
     int[] z_func(char[] str) {
