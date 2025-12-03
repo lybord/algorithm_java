@@ -159,7 +159,7 @@ class HLD {
 
     public int[] getDFNValsByWeight(int[] wt) {
         int[] ans = new int[n + 1];
-        for (int e = 2; e < n; e += 2) {
+        for (int e = (n - 1) * 2; e > 0; e -= 2) {
             ans[Math.max(dfn[to[e]], dfn[to[e ^ 1]])] = wt[e];
         }
         return ans;
