@@ -22,6 +22,10 @@ class SegTree {
         build(arr, low, high, 1);
     }
 
+    public void init(int[] arr) {
+        build(arr, low, high, 1);
+    }
+
     private void build(int[] arr, int l, int r, int i) {
         if (l == r) {
             mx[i] = arr[l];
