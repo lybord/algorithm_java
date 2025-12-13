@@ -1,5 +1,9 @@
 int[] head, nxt, to; boolean[] vis;
 
+void solve() {
+    
+}
+
 void cd(java.util.function.IntConsumer calc) {
     int[] mainStk = new int[head.length], stk = new int[head.length], fa = new int[head.length], sz = new int[head.length];
     java.util.function.IntBinaryOperator getCentroid = (f, u) -> {
