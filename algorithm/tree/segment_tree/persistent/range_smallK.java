@@ -139,4 +139,26 @@ class SegTree {
             return cnt[rc[j]] - cnt[rc[i]] + countMore(o, l, m, lc[i], lc[j]);
         }
     }
+
+    // 查询 a[l:r] 中值在 [vl, vr] 上的元素数量
+    public int countRange(int l, int r, int vl, int vr) {
+        vl = Math.max(vl, val[0]);
+        vr = Math.min(vr, val[N - 1]);
+        return vl > vr ? 0 : countRange(vl, vr, 0, N - 1, l == 0 ? 0 : root[l - 1], root[r]);
+    }
+
+    private int countRange(int L, int R, int l, int r, int i, int j) {
+        if (L <= val[l] && val[r] <= R) {
+            return cnt[j] - cnt[i];
+        }
+        int m = (l + r) >> 1;
+        int ans = 0;
+        if (L <= val[m]) {
+            ans += countRange(L, R, l, m, lc[i], lc[j]);
+        }
+        if (R > val[m]) {
+            ans += countRange(L, R, m + 1, r, rc[i], rc[j]);
+        }
+        return ans;
+    }
 }
