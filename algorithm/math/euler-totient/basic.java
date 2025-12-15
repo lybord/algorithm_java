@@ -1,21 +1,21 @@
 /**
- * 莫比乌斯函数
+ * 欧拉函数
  */
-public class Basic {
-
-    // 线性筛求莫比乌斯函数
-    int[] getMu(int n) {
+public class basic {
+    
+    // 线性筛求欧拉函数
+    int[] getPhi(int n) {
         boolean[] isp = new boolean[n + 1];
         int[] prime = new int[n + 1];
         for (int i = 2; i <= n; i++) {
             isp[i] = true;
         }
-        int[] mu = new int[n + 1];
-        mu[1] = 1;
+        int[] phi = new int[n + 1];
+        phi[1] = 1;
         for (int i = 2, j = 0, v; i <= n; i++) {
             if (isp[i]) {
                 prime[j++] = i;
-                mu[i] = -1;
+                phi[i] = i - 1;
             }
             for (int p : prime) {
                 v = i * p;
@@ -24,14 +24,13 @@ public class Basic {
                 }
                 isp[v] = false;
                 if (i % p == 0) {
+                    phi[i] = p * phi[i];
                     break;
                 }
-                mu[v] = -mu[i];
+                phi[i] = phi[i] * (p - 1);
             }
         }
-        return mu;
+        return phi;
     }
-
-    
     
 }

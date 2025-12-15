@@ -110,13 +110,11 @@ class Complex {
 
 // FFT 封装类
 class FFT {
-    private static double x, y, t, w1x, w1y, wkx, wky, ax, ay, bx, by;
-    private static int[] r;
 
     public static long[] mul(int[] a, int[] b) {
         int n = a.length - 1, m = b.length - 1;
         int N = 1 << (32 - Integer.numberOfLeadingZeros(n + m));
-        r = new int[N];
+        int[] r = new int[N];
         for (int i = 0; i < N; i++) {
             r[i] = r[i >> 1] >> 1 | ((i & 1) == 0 ? 0 : N >> 1);
         }
@@ -127,26 +125,26 @@ class FFT {
         for (int i = 0; i <= m; i++) {
             Bx[i] = b[i];
         }
-        fft(Ax, Ay, N, 1);
-        fft(Bx, By, N, 1);
+        fft(r, Ax, Ay, N, 1);
+        fft(r, Bx, By, N, 1);
         for (int i = 0; i < N; i++) {
-            x = Ax[i] * Bx[i] - Ay[i] * By[i];
-            y = Ax[i] * By[i] + Ay[i] * Bx[i];
+            double x = Ax[i] * Bx[i] - Ay[i] * By[i];
+            double y = Ax[i] * By[i] + Ay[i] * Bx[i];
             Ax[i] = x;
             Ay[i] = y;
         }
-        fft(Ax, Ay, N, -1);
+        fft(r, Ax, Ay, N, -1);
         long[] ans = new long[n + m + 1];
         for (int i = 0; i <= n + m; i++) {
-            ans[i] = (long) (Ax[i] / N + (Ax[i] > 0 ? 0.5 : -0.5));
+            ans[i] = (long) (Ax[i] / N + (Ax[i] >= 0 ? 0.5 : -0.5));
         }
         return ans;
     }
 
-    private static void fft(double[] Ax, double[] Ay, int n, int op) {
+    private static void fft(int[] r, double[] Ax, double[] Ay, int n, int op) {
         for (int i = 0; i < n; i++) {
             if (i < r[i]) {
-                t = Ax[i];
+                double t = Ax[i];
                 Ax[i] = Ax[r[i]];
                 Ax[r[i]] = t;
                 t = Ay[i];
@@ -155,22 +153,22 @@ class FFT {
             }
         }
         for (int m = 2; m <= n; m <<= 1) {
-            w1x = Math.cos(Math.PI * 2 / m);
-            w1y = Math.sin(Math.PI * 2 / m) * op;
+            double w1x = Math.cos(Math.PI * 2 / m);
+            double w1y = Math.sin(Math.PI * 2 / m) * op;
             for (int k = 0; k < n; k += m) {
-                wkx = 1;
-                wky = 0;
+                double wkx = 1;
+                double wky = 0;
                 for (int i = k, j = k + m / 2; i < k + m / 2; i++, j++) {
-                    ax = Ax[i];
-                    ay = Ay[i];
-                    bx = Ax[j] * wkx - Ay[j] * wky;
-                    by = Ax[j] * wky + Ay[j] * wkx;
+                    double ax = Ax[i];
+                    double ay = Ay[i];
+                    double bx = Ax[j] * wkx - Ay[j] * wky;
+                    double by = Ax[j] * wky + Ay[j] * wkx;
                     Ax[i] = ax + bx;
                     Ay[i] = ay + by;
                     Ax[j] = ax - bx;
                     Ay[j] = ay - by;
-                    x = w1x * wkx - w1y * wky;
-                    y = w1x * wky + w1y * wkx;
+                    double x = w1x * wkx - w1y * wky;
+                    double y = w1x * wky + w1y * wkx;
                     wkx = x;
                     wky = y;
                 }
