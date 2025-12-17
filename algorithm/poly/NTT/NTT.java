@@ -21,7 +21,7 @@ class NTT {
         }
      }
 
-     public static long[] mul(int[] a, int[] b) {
+     public static int[] mul(int[] a, int[] b) {
         int n = a.length - 1, m = b.length - 1;
         int N = 1 << (32 - Integer.numberOfLeadingZeros(n + m));
         int[] r = new int[N];
@@ -41,10 +41,10 @@ class NTT {
             A[i] = A[i] * B[i] % MOD;
         }
         ntt(r, A, N, -1);
-        long[] ans = new long[n + m + 1];
+        int[] ans = new int[n + m + 1];
         long iN = pow(N, MOD - 2);
         for (int i = 0; i <= n + m; i++) {
-            ans[i] = A[i] * iN % MOD;
+            ans[i] = (int) (A[i] * iN % MOD);
         }
         return ans;
     }
