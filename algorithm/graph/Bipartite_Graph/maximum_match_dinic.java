@@ -11,7 +11,7 @@ public class maximum_match_dinic {
 
     void solve() {
         int n = ni(), m = ni(), e = ni();
-        MF mf = new MF(n, m, e);
+        MF mf = new MF(n, m);
         for (int i = 0; i < e; i++) {
             int u = ni(), v = ni();
             mf.addBiEdge(u, v);
@@ -26,14 +26,14 @@ class MF {
     private int n, m, s, t, z;
     private int[] head, nxt, to, cap, es, dep, que;
 
-    public MF(int n, int m, int e) {
+    public MF(int n, int m) {
         this.n = n;
         this.m = m;
         s = n + m + 1;
         t = s + 1;
         z = 2;
         head = new int[n + m + 3];
-        int tot = (n + m + e + 1) << 1;
+        int tot = (n + m + 2) << 2;
         nxt = new int[tot];
         to = new int[tot];
         cap = new int[tot];
@@ -51,6 +51,12 @@ class MF {
     }
 
     public void addBiEdge(int u, int v) {
+        if (z + 1 <= nxt.length) {
+            int len = nxt.length << 1;
+            nxt = java.util.Arrays.copyOf(nxt, len);
+            to = java.util.Arrays.copyOf(to, len);
+            cap = java.util.Arrays.copyOf(cap, len);
+        }
         v += n;
         addEdge(u, v, 1);
         addEdge(v, u, 0);

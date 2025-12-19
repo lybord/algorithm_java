@@ -25,7 +25,7 @@ public class CostFlow {
 
 class MCMF {
     private final long INF = 0x3f3f3f3f3f3f3f3fL;
-    private int n, m, s, t, z;
+    private int n, s, t, z;
     private int[] head, nxt, to, es;
     private int qn, que[];
     private long[] cap, cost;
@@ -33,25 +33,31 @@ class MCMF {
     private long[] dis;
     private long res;
 
-    public MCMF(int n, int m, int s, int t) {
+    public MCMF(int n, int s, int t) {
         this.n = n;
-        this.m = m;
         this.s = s;
         this.t = t;
         z = 2;
         head = new int[n + 1];
-        nxt = new int[m + 1 << 1];
-        to = new int[m + 1 << 1];
+        nxt = new int[n << 2];
+        to = new int[n << 2];
         es = new int[n + 1];
         qn = 1 << (32 - Integer.numberOfLeadingZeros(n - 1));
         que = new int[qn--];
-        cap = new long[m + 1 << 1];
-        cost = new long[m + 1 << 1];
+        cap = new long[n << 2];
+        cost = new long[n << 2];
         vis = new boolean[n + 1];
         dis = new long[n + 1];
     }
 
     public void addBiEdge(int u, int v, long w, long c) {
+        if (z + 1 >= nxt.length) {
+            int len = nxt.length << 1;
+            nxt = java.util.Arrays.copyOf(nxt, len);
+            to = java.util.Arrays.copyOf(to, len);
+            cap = java.util.Arrays.copyOf(cap, len);
+            cost = java.util.Arrays.copyOf(cost, len);
+        }
         addEdge(u, v, w, c);
         addEdge(v, u, 0, -c);
     }

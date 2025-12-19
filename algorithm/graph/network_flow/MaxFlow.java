@@ -12,7 +12,7 @@ public class MaxFlow {
 
     void solve() {
         int n = ni(), m = ni(), s = ni(), t = ni();
-        MF mf = new MF(n, m, s, t);
+        MF mf = new MF(n, s, t);
         for (int i = 0; i < m; i++) {
             int u = ni(), v = ni(), w = ni();
             mf.addBiEdge(u, v, w);
@@ -24,26 +24,31 @@ public class MaxFlow {
 
 class MF {
     private final long INF = 0x3f3f3f3f3f3f3f3fL;
-    private int n, m, s, t, z;
+    private int n, s, t, z;
     private int[] head, nxt, to, es, dep, que;
     private long[] cap;
 
-    public MF(int n, int m, int s, int t) {
+    public MF(int n, int s, int t) {
         this.n = n;
-        this.m = m;
         this.s = s;
         this.t = t;
         z = 2;
         head = new int[n + 1];
-        nxt = new int[m + 1 << 1];
-        to = new int[m + 1 << 1];
-        cap = new long[m + 1 << 1];
+        nxt = new int[n << 2];
+        to = new int[n << 2];
+        cap = new long[n << 2];
         es = new int[n + 1];
         dep = new int[n + 1];
         que = new int[n];
     }
 
     public void addBiEdge(int u, int v, long w) {
+        if (z + 1 >= nxt.length) {
+            int len = nxt.length << 1;
+            nxt = java.util.Arrays.copyOf(nxt, len);
+            to = java.util.Arrays.copyOf(to, len);
+            cap = java.util.Arrays.copyOf(cap, len);
+        }
         addEdge(u, v, w);
         addEdge(v, u, 0);
     }
