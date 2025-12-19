@@ -11,7 +11,7 @@ public class CostFlow {
 
     void solve() {
         int n = ni(), m = ni(), s = ni(), t = ni();
-        MCMF mcmf = new MCMF(n, m, s, t);
+        MCMF mcmf = new MCMF(n, s, t);
         while (m-- > 0) {
             int u = ni(), v = ni(), w = ni(), c = ni();
             mcmf.addBiEdge(u, v, w, c);
