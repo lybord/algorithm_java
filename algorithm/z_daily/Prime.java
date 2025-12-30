@@ -1,18 +1,18 @@
+
 class Prime {
-    private final int[] x32 = {2, 7, 61}, x78 = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
-    private final int N;
-    private boolean[] isp;
-    private int[] mf;
-    private int[] num;
-    private int[][] factory;
+    private static final int[] x32 = {2, 7, 61}, x78 = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
+    private static final int N = 1000000;
+    private static boolean[] isp;
+    private static int[] mf;
+    private static int[] num;
+    private static int[][] factory;
 
-    private final long i31 = 1L << 31;
-    private java.util.Random rnd = new java.util.Random();
-    private long[] fac = new long[64];
-    private int fi;
+    private static final long i31 = 1L << 31;
+    private static java.util.Random rnd = new java.util.Random();
+    private static long[] fac = new long[64];
+    private static int fi;
 
-    public Prime(int MAXN) {
-        N = MAXN;
+    static {
         isp = new boolean[N + 1];
         mf = new int[N + 1];
         num = new int[N / 2 + 1];
@@ -37,52 +37,37 @@ class Prime {
         num = java.util.Arrays.copyOf(num, j);
     }
 
-    public Prime(int MAXN, boolean generateFactory) {
-        N = MAXN;
-        int[] len = new int[N + 1];
-        for (int i = 1; i <= N; i++) {
-            for (int j = i; j <= N; j += i) {
-                len[j]++;
-            }
-        }
-        factory = new int[N + 1][];
-        for (int i = 1; i <= N; i++) {
-            factory[i] = new int[len[i]];
-        }
-        int n = 0;
-        for (int i = N; i >= 1; i--) {
-            if (len[i] == 2) {
-                n++;
-            }
-            for (int j = i; j <= N; j += i) {
-                factory[j][--len[j]] = i;
-            }
-        }
-        isp = new boolean[N + 1];
-        mf = new int[N + 1];
-        num = new int[n];
-        for (int i = 2, j = 0; i <= N; i++) {
-            if ((mf[i] = factory[i][1]) == i) {
-                isp[i] = true;
-                num[j++] = i;
-            }
-        }
-    }
-
-    public boolean isP(int n) {
+    public static boolean isP(int n) {
         return n <= N ? isp[n] : MillerRabin(n);
     }
 
-    public boolean isP(long n) {
+    public static boolean isP(long n) {
         return n < i31 ? isP((int) n) : MillerRabin(n);
     }
     
-    public int[] primes() {
+    public static int[] primes() {
         return num;
     }
 
-    public int[] factories(int n) {
+    public static int[] factories(int n) {
         if (n <= N) {
+            if (factory == null) {
+                int[] len = new int[N + 1];
+                for (int i = 1; i <= N; i++) {
+                    for (int j = i; j <= N; j += i) {
+                        len[j]++;
+                    }
+                }
+                factory = new int[N + 1][];
+                for (int i = 1; i <= N; i++) {
+                    factory[i] = new int[len[i]];
+                }
+                for (int i = N; i >= 1; i--) {
+                    for (int j = i; j <= N; j += i) {
+                        factory[j][--len[j]] = i;
+                    }
+                }
+            }
             return factory[n];
         }
         long[] a = factories((long) n);
@@ -93,7 +78,7 @@ class Prime {
         return res;
     }
 
-    public long[] factories(long n) {
+    public static long[] factories(long n) {
         long[] a = pFactories(n);
         long[] tmp = new long[a.length];
         int z = 0;
@@ -118,7 +103,7 @@ class Prime {
             }
         }
         long[] res = new long[1 << z];
-        Arrays.fill(res, 1);
+        java.util.Arrays.fill(res, 1);
         for (int s = 0; s < 1 << z; s++) {
             for (int i = 0; i < z; i++) {
                 if ((s >> i & 1) != 0) {
@@ -126,21 +111,21 @@ class Prime {
                 }
             }
         }
-        Arrays.sort(res);
+        java.util.Arrays.sort(res);
         z = 1;
         for (int i = 1; i < res.length; i++) {
             if (res[i - 1] != res[i]) {
                 res[z++] = res[i];
             }
         }
-        return Arrays.copyOf(res, z);
+        return java.util.Arrays.copyOf(res, z);
     }
 
-    public int minf(int n) {
+    public static int minf(int n) {
         return (int) minf((long) n);
     }
 
-    public long minf(long n) {
+    public static long minf(long n) {
         if (n <= N) {
             return mf[(int) n];
         }
@@ -153,11 +138,11 @@ class Prime {
         return ans;
     }
 
-    public int maxf(int n) {
+    public static int maxf(int n) {
         return (int) maxf((long) n);
     }
 
-    public long maxf(long n) {
+    public static long maxf(long n) {
         fi = 0;
         dfs(n);
         long ans = 0;
@@ -167,7 +152,7 @@ class Prime {
         return ans;
     }
 
-    public int[] pFactories(int n) {
+    public static int[] pFactories(int n) {
         fi = 0;
         dfs(n);
         int[] ans = new int[fi];
@@ -178,7 +163,7 @@ class Prime {
         return ans;
     }
 
-    public long[] pFactories(long n) {
+    public static long[] pFactories(long n) {
         fi = 0;
         dfs(n);
         long[] ans = new long[fi];
@@ -189,7 +174,7 @@ class Prime {
         return ans;
     }
     
-    private void dfs(int n) {
+    private static void dfs(int n) {
         if (n < 2) {
             return;
         }
@@ -205,7 +190,7 @@ class Prime {
         dfs(n / d);
     }
 
-    private void dfs(long n) {
+    private static void dfs(long n) {
         if (n < i31) {
             dfs((int) n);
             return;
@@ -222,7 +207,7 @@ class Prime {
         dfs(n / d);
     }
 
-    private boolean MillerRabin(int n) {
+    private static boolean MillerRabin(int n) {
         int a = n - 1, b = Integer.numberOfTrailingZeros(a);
         a >>= b;
         for (int x : x32) {
@@ -233,7 +218,7 @@ class Prime {
         return true;
     }
 
-    private boolean MillerRabin(long n) {
+    private static boolean MillerRabin(long n) {
         long a = n - 1;
         int b = Long.numberOfTrailingZeros(a);
         a >>= b;
@@ -245,7 +230,7 @@ class Prime {
         return true;
     }
 
-    private boolean check(long n, long a, int b, int x) {
+    private static boolean check(long n, long a, int b, int x) {
         long v = pow(x, a, n);
         if (v == 1) {
             return true;
@@ -261,7 +246,7 @@ class Prime {
         return false;
     }
     
-    private boolean check2(long n, long a, int b, int x) {
+    private static boolean check2(long n, long a, int b, int x) {
         long v = pow2(x, a, n);
         if (v == 1) {
             return true;
@@ -277,7 +262,7 @@ class Prime {
         return false;
     }
     
-    private int PollardRho(int n) {
+    private static int PollardRho(int n) {
         if (n <= N) {
             return mf[n];
         }
@@ -299,7 +284,7 @@ class Prime {
         }
     }
     
-    private long PollardRho(long n) {
+    private static long PollardRho(long n) {
         if (n < i31) {
             return PollardRho((int) n);
         }
@@ -321,21 +306,21 @@ class Prime {
         }
     }
     
-    private long f(long x, long c, long m) {
+    private static long f(long x, long c, long m) {
         return (x * x + c) % m;
     }
-    private long f2(long x, long c, long m) {
+    private static long f2(long x, long c, long m) {
         return (mul(x, x, m) + c) % m;
     }
     
-    private long gcd(long a, long b) {
+    private static long gcd(long a, long b) {
         while (b != 0) {
             b = a % (a = b);
         }
         return a;
     }
 
-    private long pow(long a, long b, long m) {
+    private static long pow(long a, long b, long m) {
         long res = 1;
         while (b != 0) {
             if ((b & 1) != 0) {
@@ -347,7 +332,7 @@ class Prime {
         return res;
     }
 
-    private long pow2(long a, long b, long m) {
+    private static long pow2(long a, long b, long m) {
         long res = 1;
         while (b != 0) {
             if ((b & 1) != 0) {
@@ -359,15 +344,16 @@ class Prime {
         return res;
     }
     
-    private long mul(long a, long b, long m) {
-        long res = 0;
-        while (b != 0) {
-            if ((b & 1) != 0) {
-                res = (res + a) % m;
-            }
-            a = (a + a) % m;
-            b >>= 1;
+    private static long mul(long a, long b, long m) {
+        long high = Math.multiplyHigh(a, b), low = a * b;
+        high %= m;
+        long f = -1;
+        for (int i = 63; i >= 0;) {
+            int h = Math.min(Long.numberOfLeadingZeros(high) - 1, i + 1);
+            high = (high << h | ((f & low) >>> (i + 1 - h))) % m;
+            f >>>= h;
+            i -= h;
         }
-        return res;
+        return high;
     }
 }
