@@ -82,7 +82,58 @@ class Prime {
     }
 
     public int[] factories(int n) {
-        return factory[n];
+        if (n <= N) {
+            return factory[n];
+        }
+        long[] a = factories((long) n);
+        int[] res = new int[a.length];
+        for (int i = 0; i < a.length; i++) {
+            res[i] = (int) a[i];
+        }
+        return res;
+    }
+
+    public long[] factories(long n) {
+        long[] a = pFactories(n);
+        long[] tmp = new long[a.length];
+        int z = 0;
+        for (int i = 0, j = i; i < a.length; i = j) {
+            while (j < a.length && a[i] == a[j]) {
+                j++;
+            }
+            int len = j - i;
+            long v = a[i], c = 1;
+            while (len >= c) {
+                tmp[z++] = v;
+                len -= c;
+                c <<= 1;
+                v *= v;
+            }
+            if (len > 0) {
+                v = 1;
+                while (len-- > 0) {
+                    v *= a[i];
+                }
+                tmp[z++] = v;
+            }
+        }
+        long[] res = new long[1 << z];
+        Arrays.fill(res, 1);
+        for (int s = 0; s < 1 << z; s++) {
+            for (int i = 0; i < z; i++) {
+                if ((s >> i & 1) != 0) {
+                    res[s] *= tmp[i];
+                }
+            }
+        }
+        Arrays.sort(res);
+        z = 1;
+        for (int i = 1; i < res.length; i++) {
+            if (res[i - 1] != res[i]) {
+                res[z++] = res[i];
+            }
+        }
+        return Arrays.copyOf(res, z);
     }
 
     public int minf(int n) {
