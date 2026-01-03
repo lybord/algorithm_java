@@ -8,7 +8,7 @@ class RMQ {
         }
     }
 
-    private int[][] st;
+    private final int[][] st;
 
     private final java.util.function.IntBinaryOperator op;
 
@@ -40,7 +40,7 @@ class RMQ2 {
         }
     }
     
-    private long[][] st;
+    private final long[][] st;
 
     private final java.util.function.LongBinaryOperator op;
 
