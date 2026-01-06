@@ -1,6 +1,7 @@
 class CD {
 
-    int[] head, nxt, to; boolean[] vis;
+    int[] head, nxt, to;
+    boolean[] vis;
 
     void cd(java.util.function.IntConsumer calc) {
         int[] mainStk = new int[head.length], stk = new int[head.length], fa = new int[head.length], sz = new int[head.length];
