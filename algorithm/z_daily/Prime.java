@@ -1,4 +1,3 @@
-
 class Prime {
     private static final int[] x32 = {2, 7, 61}, x78 = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
     private static final int N = 1000000;
