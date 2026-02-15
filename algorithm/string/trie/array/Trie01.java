@@ -62,7 +62,7 @@ class Trie01 {
         int ans = 0;
         for (int i = H, j; i >= 0; i--) {
             j = idx(u, (v >> i & 1) ^ 1);
-            if (nxt[j] != 0) {
+            if (cnt[nxt[j]] != 0) {
                 ans |= 1 << i;
                 u = nxt[j];
             } else {
@@ -77,7 +77,7 @@ class Trie01 {
         int ans = 0;
         for (int i = H, j; i >= 0; i--) {
             j = idx(u, v >> i & 1);
-            if (nxt[j] != 0) {
+            if (cnt[nxt[j]] != 0) {
                 u = nxt[j];
             } else {
                 ans |= 1 << i;
