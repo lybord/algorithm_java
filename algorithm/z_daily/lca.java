@@ -1,52 +1,69 @@
-import static algorithm.zz.U.*;
+class LCA {
+    private final int[] head, nxt, to, stk, log, st[];
+    final int[] dfn, fa, dep;
 
-public class lca {
-    
-    int[] head, nxt, to, dep, pa[];
-    int H = 17;
+    public LCA(int root, int[] head, int[] nxt, int[] to) {
+        this.head = head;
+        this.nxt = nxt;
+        this.to = to;
 
-    void solve() {
-        int n = ni();
-        head = new int[n + 1]; nxt = new int[n << 1]; to = new int[n << 1]; dep = new int[n + 1]; pa = new int[n + 1][H];
-        for (int i = 1, j = 2; i < n; i++) {
-            int u = ni(), v = ni();
-            nxt[j] = head[u]; head[u] = j; to[j++] = v;
-            nxt[j] = head[v]; head[v] = j; to[j++] = u;
-        }
-        init(0, 1);
+        int n = head.length - 1;
+        stk = new int[n + 1];
+        dfn = new int[n + 1];
+        fa = new int[n + 1];
+        dep = new int[n + 1];
         
-    }
-
-    int lca(int u, int v) {
-        if (dep[u] < dep[v]) {
-            u ^= v ^ (v = u);
+        log = new int[n + 1];
+        log[0] = -1;
+        for (int i = 1; i <= n; i++) {
+            log[i] = log[i >> 1] + 1;
         }
-        for (int i = 0, d = dep[u] - dep[v]; i < H; i++) {
-            if ((d >> i & 1) != 0) {
-                u = pa[u][i];
+        int h = log[n] + 1;
+        st = new int[h][n + 1];
+
+        dfs(0, root);
+        for (int i = 1; i < h; i++) {
+            for (int j = 1; j + (1 << (i - 1)) <= n; j++) {
+                int u = st[i - 1][j], v = st[i - 1][j + (1 << (i - 1))];
+                st[i][j] = dep[u] < dep[v] ? u : v;
             }
         }
+    }
+
+    public int get(int u, int v) {
         if (u == v) {
             return u;
         }
-        for (int i = H - 1; i >= 0; i--) {
-            if (pa[u][i] != pa[v][i]) {
-                u = pa[u][i];
-                v = pa[v][i];
-            }
+        int l = dfn[u], r = dfn[v];
+        if (l > r) {
+            l ^= r ^ (r = l);
         }
-        return pa[u][0];
+        l++;
+        int g = log[r - l + 1];
+        u = st[g][l];
+        v = st[g][r - (1 << g) + 1];
+        return dep[u] < dep[v] ? u : v;
     }
 
-    void init(int f, int u) {
-        dep[u] = dep[f] + 1;
-        pa[u][0] = f;
-        for (int i = 1; i < H; i++) {
-            pa[u][i] = pa[pa[u][i - 1]][i - 1];
-        }
-        for (int e = head[u], v; e != 0; e = nxt[e]) {
-            if (f != (v = to[e])) {
-                init(u, v);
+    private void dfs(int f, int u) {
+        int z = 0, no = 0;
+        stk[++z] = u;
+        fa[u] = f;
+        while (z > 0) {
+            u = stk[z];
+            f = fa[u];
+            if (dfn[u] == 0) {
+                dfn[u] = ++no;
+                dep[u] = dep[f] + 1;
+                st[0][no] = f;
+                for (int e = head[u], v; e != 0; e = nxt[e]) {
+                    if (f != (v = to[e])) {
+                        stk[++z] = v;
+                        fa[v] = u;
+                    }
+                }
+            } else {
+                z--;
             }
         }
     }
