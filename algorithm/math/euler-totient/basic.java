@@ -17,7 +17,8 @@ public class basic {
                 prime[j++] = i;
                 phi[i] = i - 1;
             }
-            for (int p : prime) {
+            for (int k = 0, p; k < j; k++) {
+                p = prime[k];
                 v = i * p;
                 if (v > n) {
                     break;

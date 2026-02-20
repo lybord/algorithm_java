@@ -22,7 +22,8 @@ class Prime {
                 isp[i] = true;
                 num[j++] = i;
             }
-            for (int p : num) {
+            for (int k = 0, p; k < j; k++) {
+                p = num[k];
                 v = p * i;
                 if (v > N) {
                     break;
