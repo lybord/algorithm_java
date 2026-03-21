@@ -208,7 +208,7 @@ class SuffixArray {// DC3
 
     public int lcp(int i, int j) {
         if (i == j) {
-            return sa.length - sa[rk[i]];
+            return sa.length - i;
         }
         i = rk[i];
         j = rk[j];
