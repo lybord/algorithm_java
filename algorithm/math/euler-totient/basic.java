@@ -25,10 +25,10 @@ public class basic {
                 }
                 isp[v] = false;
                 if (i % p == 0) {
-                    phi[i] = p * phi[i];
+                    phi[v] = p * phi[i];
                     break;
                 }
-                phi[i] = phi[i] * (p - 1);
+                phi[v] = phi[i] * (p - 1);
             }
         }
         return phi;
