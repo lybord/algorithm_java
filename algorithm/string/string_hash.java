@@ -43,19 +43,40 @@ class StringHash {
         }
     }
 
-    public long hash1(int l, int r) {
-        return (PRE_HASH1[r + 1] - (long) PRE_HASH1[l] * POW_BASE1[r - l + 1] % MOD1 + MOD1) % MOD1;
+    public StringHash(char[] str) {
+        N = str.length;
+        PRE_HASH1 = new int[N + 1];
+        PRE_HASH2 = new int[N + 1];
+        for (int i = 0; i < N; i++) {
+            PRE_HASH1[i + 1] = (int) (((long) PRE_HASH1[i] * BASE1 + str[i]) % MOD1);
+            PRE_HASH2[i + 1] = (int) (((long) PRE_HASH2[i] * BASE2 + str[i]) % MOD2);
+        }
     }
 
-    public long hash2(int l, int r) {
-        return (PRE_HASH2[r + 1] - (long) PRE_HASH2[l] * POW_BASE2[r - l + 1] % MOD2 + MOD2) % MOD2;
+    public StringHash(int[] arr) {
+        N = arr.length;
+        PRE_HASH1 = new int[N + 1];
+        PRE_HASH2 = new int[N + 1];
+        for (int i = 0; i < N; i++) {
+            PRE_HASH1[i + 1] = (int) (((long) PRE_HASH1[i] * BASE1 + arr[i]) % MOD1);
+            PRE_HASH2[i + 1] = (int) (((long) PRE_HASH2[i] * BASE2 + arr[i]) % MOD2);
+        }
     }
 
     public long hash(int l, int r) {// s[l:r]
-        return hash1(l, r) << 32 | hash2(l, r);
+        long h1 = (PRE_HASH1[r + 1] - (long) PRE_HASH1[l] * POW_BASE1[r - l + 1]) % MOD1;
+        long h2 = (PRE_HASH2[r + 1] - (long) PRE_HASH2[l] * POW_BASE2[r - l + 1]) % MOD2;
+        if (h1 < 0) {
+            h1 += MOD1;
+        }
+        if (h2 < 0) {
+            h2 += MOD2;
+        }
+        return h1 << 32 | h2;
     }
 
     public boolean same(int l1, int r1, int l2, int r2) {
-        return hash(l1, r1) == hash(l2, r2);
+        return ((long) PRE_HASH1[l2] * POW_BASE1[r2 - l2 + 1] - (long) PRE_HASH1[l1] * POW_BASE1[r1 - l1 + 1] + PRE_HASH1[r1 + 1] - PRE_HASH1[r2 + 1]) % MOD1 == 0
+        && ((long) PRE_HASH2[l2] * POW_BASE2[r2 - l2 + 1] - (long) PRE_HASH2[l1] * POW_BASE2[r1 - l1 + 1] + PRE_HASH2[r1 + 1] - PRE_HASH2[r2 + 1]) % MOD2 == 0;
     }
 }
