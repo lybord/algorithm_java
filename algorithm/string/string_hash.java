@@ -20,8 +20,8 @@ class StringHash {
             MOD2 = i;
             break;
         }
-        BASE1 = (int) (8e8 + 1e8 * Math.random());
-        BASE2 = (int) (8e8 + 1e8 * Math.random());
+        BASE1 = (int) (1e7 + 9e7 * Math.random());
+        BASE2 = (int) (1e8 + 9e8 * Math.random());
         POW_BASE1[0] = POW_BASE2[0] = 1;
         for (int i = 0; i < MAXN; i++) {
             POW_BASE1[i + 1] = (int) ((long) POW_BASE1[i] * BASE1 % MOD1);
